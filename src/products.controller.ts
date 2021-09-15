@@ -8,38 +8,34 @@ import {
   Put,
 } from '@nestjs/common';
 import { Product } from './product.model';
+import { ProductService } from './product.service';
 @Controller('products')
 export class ProductsController {
-  products: Product[] = [
-    new Product('LIV001', 'Livro TDD e BDD na prática', 29.9),
-    new Product('LIV002', 'Livro iniciando com flutter', 39.9),
-    new Product('LIV003', 'Livro IA as a service', 29.9),
-  ];
+  constructor(private productService: ProductService) {}
 
   @Get()
   getAll(): Product[] {
-    return this.products;
+    return this.productService.getAll();
   }
 
   @Get(':id')
   getOne(@Param() params): Product {
-    return this.products[0];
+    return this.productService.getOne(params.id);
   }
 
   @Post()
-  create(@Body() product: Product): Product {
+  create(@Body() product: Product) {
     product.id = Date.now();
-    this.products.push(product);
-    return product;
+    this.productService.create(product);
   }
 
   @Put(':id')
   update(@Body() updateProductBody: Product): Product {
-    return updateProductBody;
+    return this.productService.update(updateProductBody);
   }
 
   @Delete(':id')
   delete(@Param() params): void {
-    this.products.pop();
+    this.productService.delete(params.id);
   }
 }
