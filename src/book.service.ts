@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { Book } from './book.model';
 
 @Injectable()
 export class BookService {
-  books: Book[] = [
-    new Book('LIV001', 'Livro TDD e BDD na prática', 29.9),
-    new Book('LIV002', 'Livro iniciando com flutter', 39.9),
-    new Book('LIV003', 'Livro IA as a service', 29.9),
-  ];
+
+  constructor(
+    @InjectModel(Book),
+  ) {}
 
   getAll(): Book[] {
     return this.books;
