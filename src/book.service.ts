@@ -4,28 +4,34 @@ import { Book } from './book.model';
 
 @Injectable()
 export class BookService {
-
   constructor(
-    @InjectModel(Book),
+    @InjectModel(Book)
+    private bookModel: typeof Book,
   ) {}
 
-  getAll(): Book[] {
-    return this.books;
+  async getAll(): Promise<Book[]> {
+    return this.bookModel.findAll();
   }
 
-  getOne(id: number): Book {
-    return this.books[0];
+  async getOne(id: number): Promise<Book> {
+    return this.bookModel.findByPk(id);
   }
 
-  create(product: Book): void {
-    this.books.push(product);
+  async create(product: Book): Promise<void> {
+    this.bookModel.create(product);
   }
 
-  update(product: Book): Book {
-    return product;
+  async update(book: Book): Promise<[number, Book[]]> {
+    return this.bookModel.update(book, {
+      where: {
+        id: book.id,
+      },
+    });
   }
 
-  delete(id: number): void {
-    this.books.pop();
+  async delete(id: number): Promise<void> {
+    const book = await this.getOne(id);
+
+    book.destroy();
   }
 }

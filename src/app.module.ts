@@ -1,14 +1,28 @@
 import { Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BookService } from './book.service';
 import { BookController } from './book.controller';
-import { databaseProviders } from './database.providers';
+import { Book } from './book.model';
+import { BookService } from './book.service';
 
 @Module({
-  imports: [],
+  imports: [
+    SequelizeModule.forRoot({
+      dialect: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'password',
+      database: 'bookstore',
+      models: [Book],
+      autoLoadModels: true,
+      synchronize: true,
+    }),
+    SequelizeModule.forFeature([Book]),
+  ],
   controllers: [AppController, BookController],
-  providers: [AppService, BookService, ...databaseProviders],
-  exports: [...databaseProviders],
+  providers: [AppService, BookService],
+  exports: [],
 })
 export class AppModule {}

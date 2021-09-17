@@ -14,28 +14,28 @@ export class BookController {
   constructor(private bookService: BookService) {}
 
   @Get()
-  getAll(): Book[] {
+  async getAll(): Promise<Book[]> {
     return this.bookService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param() params): Book {
+  async getOne(@Param() params): Promise<Book> {
     return this.bookService.getOne(params.id);
   }
 
   @Post()
-  create(@Body() book: Book) {
+  async create(@Body() book: Book) {
     book.id = Date.now();
     this.bookService.create(book);
   }
 
   @Put(':id')
-  update(@Body() updateBookBody: Book): Book {
+  async update(@Body() updateBookBody: Book): Promise<[number, Book[]]> {
     return this.bookService.update(updateBookBody);
   }
 
   @Delete(':id')
-  delete(@Param() params): void {
+  async delete(@Param() params): Promise<void> {
     this.bookService.delete(params.id);
   }
 }
